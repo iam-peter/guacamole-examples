@@ -34,7 +34,7 @@ include(find_guacamole)
 include(define_macros)
 
 include(find_schism)
-include(find_boost)
+include(FindBoost)
 include(find_bullet)
 
 if (UNIX)

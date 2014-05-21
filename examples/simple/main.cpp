@@ -20,6 +20,7 @@
  ******************************************************************************/
 
 #include <gua/guacamole.hpp>
+#include <gua/renderer/ScatterPlotLoader.hpp>
 
 #include <thread>
 #include <chrono>
@@ -32,10 +33,12 @@ int main(int argc, char** argv) {
   // setup scene
   gua::SceneGraph graph("main_scenegraph");
 
-  gua::GeometryLoader loader;
-  auto teapot_geometry(loader.create_geometry_from_file("teapot", "data/objects/teapot.obj", "data/materials/Red.gmd", gua::GeometryLoader::NORMALIZE_POSITION | gua::GeometryLoader::NORMALIZE_SCALE));
+  gua::ScatterPlotLoader loader;
+  auto teapot_geometry(loader.create_geometry_from_file("teapot", "data/objects/teapot.obj", "data/materials/Red.gmd", gua::ScatterPlotLoader::NORMALIZE_POSITION | gua::ScatterPlotLoader::NORMALIZE_SCALE));
 
   auto teapot = graph.add_node("/", teapot_geometry);
+
+  teapot->scale(10.0f);
 
   auto light = graph.add_node<gua::PointLightNode>("/", "light");
   light->scale(5.f);
@@ -50,6 +53,9 @@ int main(int argc, char** argv) {
   auto pipe = new gua::Pipeline();
   pipe->config.set_camera(gua::Camera("/screen/eye", "/screen/eye", "/screen", "/screen", "main_scenegraph"));
   pipe->config.set_enable_fps_display(true);
+
+  pipe->config.set_enable_backface_culling(false);
+
   pipe->set_window(new gua::Window());
 
   gua::Renderer renderer({pipe});
