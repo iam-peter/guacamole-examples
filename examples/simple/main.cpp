@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
 
   auto teapot = graph.add_node("/", teapot_geometry);
 
-  teapot->scale(10.0f);
+  teapot->scale(4.0f);
 
   auto light = graph.add_node<gua::PointLightNode>("/", "light");
   light->scale(5.f);
@@ -46,17 +46,22 @@ int main(int argc, char** argv) {
 
   auto screen = graph.add_node<gua::ScreenNode>("/", "screen");
   screen->data.set_size(gua::math::vec2(1.6f, 0.9f));
+  screen->translate(0.0f, 0.0f, 5.0f);
 
   auto eye = graph.add_node<gua::TransformNode>("/screen", "eye");
-  eye->translate(0, 0, 1.5);
+  eye->translate(0.0f, 0.0f, 7.0f);
 
   auto pipe = new gua::Pipeline();
   pipe->config.set_camera(gua::Camera("/screen/eye", "/screen/eye", "/screen", "/screen", "main_scenegraph"));
   pipe->config.set_enable_fps_display(true);
 
   pipe->config.set_enable_backface_culling(false);
+  pipe->config.set_enable_preview_display(true);
 
   pipe->set_window(new gua::Window());
+  pipe->get_window()->config.set_left_resolution(gua::math::vec2ui(1600, 1200));
+  pipe->get_window()->config.set_size(gua::math::vec2ui(1600, 1200));
+  pipe->config.set_left_resolution(gua::math::vec2ui(1600, 1200));
 
   gua::Renderer renderer({pipe});
 
