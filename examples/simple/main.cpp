@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 #include <gua/guacamole.hpp>
-#include <gua/renderer/ScatterPlotLoader.hpp>
+#include <gua/renderer/ConeTreeLoader.hpp>
 
 #include <thread>
 #include <chrono>
@@ -33,12 +33,13 @@ int main(int argc, char** argv) {
   // setup scene
   gua::SceneGraph graph("main_scenegraph");
 
-  gua::ScatterPlotLoader loader;
-  auto teapot_geometry(loader.create_geometry_from_file("teapot", "data/objects/teapot.obj", "data/materials/Red.gmd", gua::ScatterPlotLoader::NORMALIZE_POSITION | gua::ScatterPlotLoader::NORMALIZE_SCALE));
+  gua::ConeTreeLoader loader;
+  auto conetree_geometry(loader.create());
+  //auto teapot_geometry(loader.create_geometry_from_file("teapot", "data/objects/teapot.obj", "data/materials/Red.gmd", gua::ScatterPlotLoader::NORMALIZE_POSITION | gua::ScatterPlotLoader::NORMALIZE_SCALE));
 
-  auto teapot = graph.add_node("/", teapot_geometry);
+  auto conetree = graph.add_node("/", conetree_geometry);
 
-  teapot->scale(4.0f);
+  conetree->scale(4.0f);
 
   auto light = graph.add_node<gua::PointLightNode>("/", "light");
   light->scale(5.f);
@@ -69,7 +70,7 @@ int main(int argc, char** argv) {
   while (true) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100/6));
 
-	  teapot->rotate(0.1, 0, 1, 0);
+	  conetree->rotate(0.1, 0, 1, 0);
 
     renderer.queue_draw({&graph});
   }
