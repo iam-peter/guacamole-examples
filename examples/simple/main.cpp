@@ -21,6 +21,7 @@
 
 #include <gua/guacamole.hpp>
 #include <gua/renderer/ConeTreeLoader.hpp>
+#include <gua/renderer/TriMeshLoader.hpp>
 
 #include <thread>
 #include <chrono>
@@ -33,24 +34,31 @@ int main(int argc, char** argv) {
   // setup scene
   gua::SceneGraph graph("main_scenegraph");
 
+
   gua::ConeTreeLoader loader;
-  auto conetree_geometry(loader.create());
+  auto conetree_node(loader.create("ConeTree", "data/materials/Red.gmd"));
   //auto teapot_geometry(loader.create_geometry_from_file("teapot", "data/objects/teapot.obj", "data/materials/Red.gmd", gua::ScatterPlotLoader::NORMALIZE_POSITION | gua::ScatterPlotLoader::NORMALIZE_SCALE));
-
-  auto conetree = graph.add_node("/", conetree_geometry);
-
+  auto conetree = graph.add_node("/", conetree_node);
   conetree->scale(4.0f);
 
+/*
+  gua::TriMeshLoader loader2;
+  auto teapot_geometry(loader2.create_geometry_from_file("teapot", "data/objects/teapot.obj", "data/materials/Red.gmd", gua::TriMeshLoader::NORMALIZE_POSITION | gua::TriMeshLoader::NORMALIZE_SCALE));
+  auto teapot = graph.add_node("/", teapot_geometry);
+  teapot->scale(1.0f);
+*/
+
+
   auto light = graph.add_node<gua::PointLightNode>("/", "light");
-  light->scale(5.f);
-  light->translate(0, 1.f, 1.f);
+  light->scale(10.f);
+  light->translate(1.f, 1.f, 1.f);
 
   auto screen = graph.add_node<gua::ScreenNode>("/", "screen");
-  screen->data.set_size(gua::math::vec2(1.6f, 0.9f));
-  screen->translate(0.0f, 0.0f, 5.0f);
+  screen->data.set_size(gua::math::vec2(1.6f, 1.2f));
+  screen->translate(0.0f, 0.0f, 10.0f);
 
   auto eye = graph.add_node<gua::TransformNode>("/screen", "eye");
-  eye->translate(0.0f, 0.0f, 7.0f);
+  eye->translate(0.0f, 0.0f, 13.0f);
 
   auto pipe = new gua::Pipeline();
   pipe->config.set_camera(gua::Camera("/screen/eye", "/screen/eye", "/screen", "/screen", "main_scenegraph"));
