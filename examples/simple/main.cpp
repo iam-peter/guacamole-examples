@@ -36,29 +36,29 @@ int main(int argc, char** argv) {
 
 
   gua::ConeTreeLoader loader;
-  auto conetree_node(loader.create("ConeTree", "data/materials/Red.gmd"));
+  auto conetree_node(loader.create("ConeTree", "data/materials/Red.gmd", graph));
   //auto teapot_geometry(loader.create_geometry_from_file("teapot", "data/objects/teapot.obj", "data/materials/Red.gmd", gua::ScatterPlotLoader::NORMALIZE_POSITION | gua::ScatterPlotLoader::NORMALIZE_SCALE));
   auto conetree = graph.add_node("/", conetree_node);
-  conetree->scale(4.0f);
+  conetree->scale(1.0f);
 
-/*
   gua::TriMeshLoader loader2;
   auto teapot_geometry(loader2.create_geometry_from_file("teapot", "data/objects/teapot.obj", "data/materials/Red.gmd", gua::TriMeshLoader::NORMALIZE_POSITION | gua::TriMeshLoader::NORMALIZE_SCALE));
   auto teapot = graph.add_node("/", teapot_geometry);
   teapot->scale(1.0f);
+
+/*
+  auto point_light = graph.add_node<gua::PointLightNode>("/", "point_light");
+  point_light->scale(40.f);
+  point_light->translate(5.f, 5.f, 5.f);
 */
-
-
-  auto light = graph.add_node<gua::PointLightNode>("/", "light");
-  light->scale(10.f);
-  light->translate(1.f, 1.f, 1.f);
+  auto sun_light = graph.add_node<gua::SunLightNode>("/", "sun_light");
 
   auto screen = graph.add_node<gua::ScreenNode>("/", "screen");
-  screen->data.set_size(gua::math::vec2(1.6f, 1.2f));
-  screen->translate(0.0f, 0.0f, 10.0f);
+  screen->data.set_size(gua::math::vec2(1.6f, 1.2));
+  screen->translate(1.0f, 1.0f, 3.0f);
 
   auto eye = graph.add_node<gua::TransformNode>("/screen", "eye");
-  eye->translate(0.0f, 0.0f, 13.0f);
+  eye->translate(1.2f, 1.2f, 4.0f);
 
   auto pipe = new gua::Pipeline();
   pipe->config.set_camera(gua::Camera("/screen/eye", "/screen/eye", "/screen", "/screen", "main_scenegraph"));
