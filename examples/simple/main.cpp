@@ -25,6 +25,7 @@
 
 #include <thread>
 #include <chrono>
+ #include <iostream>
 
 const std::string geometry("data/objects/monkey.obj");
 
@@ -40,9 +41,6 @@ void setup_scene(gua::SceneGraph& graph,
       gua::math::vec3(0, offset, 0),
       gua::math::vec3(0, -offset, 0),
       gua::math::vec3(offset, 0, 0),
-      gua::math::vec3(-offset, 0, 0),
-      gua::math::vec3(0, 0, offset),
-      gua::math::vec3(0, 0, -offset)
     };
 
     for (auto direction: directions) {
@@ -78,8 +76,14 @@ int main(int argc, char** argv) {
     "data/materials/Stones.gmd"
   ));
 
-  auto root_monkey = graph.add_node("/", monkey_geometry);
-  root_monkey->scale(0.5, 0.5, 0.5);
+  auto monkey_geometry_leaf(loader.create_geometry_from_file(
+    "leaf_ape",
+    geometry,
+    "data/materials/Stones.gmd"
+  ));
+
+  // auto root_monkey = graph.add_node("/", monkey_geometry);
+  // root_monkey->scale(0.5, 0.5, 0.5);
 
   // depth    monkey    cube          car
   // 1        14.084      56    3.619.000 Vertices  /      7 draw calls
@@ -93,31 +97,58 @@ int main(int argc, char** argv) {
   auto sun_light1 = graph.add_node<gua::SunLightNode>("/", "sun_light1");
   auto sun_light2 = graph.add_node<gua::SunLightNode>("/", "sun_light2");
   auto sun_light3 = graph.add_node<gua::SunLightNode>("/", "sun_light3");
-  auto sun_light4 = graph.add_node<gua::SunLightNode>("/", "sun_light4");
+  // auto sun_light4 = graph.add_node<gua::SunLightNode>("/", "sun_light4");
+  // auto sun_light5 = graph.add_node<gua::SunLightNode>("/", "sun_light5");
+  // auto sun_light6 = graph.add_node<gua::SunLightNode>("/", "sun_light6");
+  // auto sun_light7 = graph.add_node<gua::SunLightNode>("/", "sun_light7");
+  // auto sun_light8 = graph.add_node<gua::SunLightNode>("/", "sun_light8");
+  // auto sun_light9 = graph.add_node<gua::SunLightNode>("/", "sun_light9");
 
-  auto sun_light11 = graph.add_node<gua::SunLightNode>("/sun_light1/", "sun_light11");
-  auto sun_light12 = graph.add_node<gua::SunLightNode>("/sun_light1/", "sun_light12");
-  auto sun_light13 = graph.add_node<gua::SunLightNode>("/sun_light1/", "sun_light13");
+  auto sun_light31 = graph.add_node<gua::SunLightNode>("/sun_light3/", "sun_light31");
+  auto sun_light32 = graph.add_node<gua::SunLightNode>("/sun_light3/", "sun_light32");
+  auto sun_light33 = graph.add_node<gua::SunLightNode>("/sun_light3/", "sun_light33");
+  auto sun_light34 = graph.add_node<gua::SunLightNode>("/sun_light3/", "sun_light34");
+  auto sun_light35 = graph.add_node<gua::SunLightNode>("/sun_light3/", "sun_light35");
+  auto sun_light36 = graph.add_node<gua::SunLightNode>("/sun_light3/", "sun_light36");
 
+  // auto sun_light331 = graph.add_node<gua::SunLightNode>("/sun_light3/sun_light33/", "sun_light331");
+  // auto sun_light332 = graph.add_node<gua::SunLightNode>("/sun_light3/sun_light33/", "sun_light332");
+  // auto sun_light333 = graph.add_node<gua::SunLightNode>("/sun_light3/sun_light33/", "sun_light333");
+
+  auto begin_monkey = graph.add_node("/", monkey_geometry);
+  // begin_monkey->add_child(monkey_geometry_leaf);
+  // begin_monkey->add_child(monkey_geometry_leaf);  
+  // begin_monkey->add_child(monkey_geometry_leaf);
+  setup_scene(graph, begin_monkey, 2);
+
+  auto screen = graph.add_node<gua::ScreenNode>("/", "screen");
+  screen->data.set_size(gua::math::vec2(1.6f, 1.2));
+  screen->translate(0.0f, 0.0f, 12.0f);
+
+  auto eye = graph.add_node<gua::TransformNode>("/screen", "eye");
+  eye->translate(0.0f, 0.0f, 5.0f);
 
   // displayed scenegraph
   gua::SceneGraph CT_graph("CT_scenegraph");
 
-  auto sun_light = CT_graph.add_node<gua::SunLightNode>("/", "sun_light");
 
-  auto screen = CT_graph.add_node<gua::ScreenNode>("/", "screen");
-  screen->data.set_size(gua::math::vec2(1.6f, 1.2));
-  screen->translate(0.0f, 0.0f, 3.0f);
 
-  auto eye = CT_graph.add_node<gua::TransformNode>("/screen", "eye");
-  eye->translate(0.0f, 1.0f, 5.0f);
+  auto CT_sun_light = CT_graph.add_node<gua::SunLightNode>("/", "sun_light");
 
-  //auto teapot_geometry(loader.create_geometry_from_file("teapot", "data/objects/teapot.obj", "data/materials/Red.gmd", gua::ScatterPlotLoader::NORMALIZE_POSITION | gua::ScatterPlotLoader::NORMALIZE_SCALE));
+  auto CT_screen = CT_graph.add_node<gua::ScreenNode>("/", "screen");
+  CT_screen->data.set_size(gua::math::vec2(1.6f, 1.2));
+  CT_screen->translate(0.0f, 0.0f, 12.0f);
+
+  auto CT_eye = CT_graph.add_node<gua::TransformNode>("/screen", "eye");
+  CT_eye->translate(0.0f, 0.0f, 5.0f);
+
   gua::ConeTreeLoader CT_loader;
   auto conetree_node(CT_loader.create("ConeTree", "data/materials/Red.gmd", graph));
   auto conetree = CT_graph.add_node("/", conetree_node);
-  conetree->scale(0.2f);
+  conetree->scale(0.5f);
+  conetree->translate(0.0f, 0.5f, 0.0f);
   
+
   auto pipe = new gua::Pipeline();
   pipe->config.set_camera(gua::Camera("/screen/eye", "/screen/eye", "/screen", "/screen", "CT_scenegraph"));
   pipe->config.set_enable_fps_display(true);
@@ -130,15 +161,28 @@ int main(int argc, char** argv) {
   pipe->get_window()->config.set_size(gua::math::vec2ui(1600, 1200));
   pipe->config.set_left_resolution(gua::math::vec2ui(1600, 1200));
 
-  gua::Renderer renderer({pipe});
+
+  auto CT_pipe = new gua::Pipeline();
+  CT_pipe->config.set_camera(gua::Camera("/screen/eye", "/screen/eye", "/screen", "/screen", "main_scenegraph"));
+  CT_pipe->config.set_enable_fps_display(true);
+
+  CT_pipe->config.set_enable_backface_culling(false);
+  //CT_pipe->config.set_enable_preview_display(true);
+
+  CT_pipe->set_window(new gua::Window());
+  CT_pipe->get_window()->config.set_left_resolution(gua::math::vec2ui(1600, 1200));
+  CT_pipe->get_window()->config.set_size(gua::math::vec2ui(1600, 1200));
+  CT_pipe->config.set_left_resolution(gua::math::vec2ui(1600, 1200));
+
+  gua::Renderer renderer({pipe, CT_pipe});
 
   // application loop
   while (true) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100/6));
 
-	  //conetree->rotate(0.1, 0, 1, 0);
+	  conetree->rotate(0.1, 0, 1, 0);
 
-    renderer.queue_draw({&CT_graph});
+    renderer.queue_draw({&CT_graph, &graph});
   }
 
   return 0;
