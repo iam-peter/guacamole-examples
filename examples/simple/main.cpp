@@ -21,6 +21,13 @@
 
 #include <gua/guacamole.hpp>
 
+#include <gua/utils/DataColumn.hpp>
+#include <gua/utils/DataSet.hpp>
+#include <gua/utils/string_utils.hpp>
+
+#include <gua/renderer/ScatterPlotLoader.hpp>
+
+#include <iostream>
 #include <thread>
 #include <chrono>
 
@@ -32,10 +39,20 @@ int main(int argc, char** argv) {
   // setup scene
   gua::SceneGraph graph("main_scenegraph");
 
-  gua::GeometryLoader loader;
-  auto teapot_geometry(loader.create_geometry_from_file("teapot", "data/objects/teapot.obj", "data/materials/Red.gmd", gua::GeometryLoader::NORMALIZE_POSITION | gua::GeometryLoader::NORMALIZE_SCALE));
+  gua::utils::DataSet dataset;
+  dataset.load_from_csv("data/csv/cars.csv", ";");
 
-  auto teapot = graph.add_node("/", teapot_geometry);
+  gua::ScatterPlotLoader scatterPlotLoader;
+  auto scatterplot_geometry(scatterPlotLoader.create_from_dataset(
+      "scatterplot"
+    , "data/materials/Red.gmd"
+    , dataset
+    , "Gewicht(t)"
+    , "PS"
+    //, "Vmax(km/h)"
+  ));
+  auto scatterplot = graph.add_node("/", scatterplot_geometry);
+  scatterplot->scale(0.5f);
 
   auto light = graph.add_node<gua::PointLightNode>("/", "light");
   light->scale(5.f);
@@ -45,12 +62,26 @@ int main(int argc, char** argv) {
   screen->data.set_size(gua::math::vec2(1.6f, 0.9f));
 
   auto eye = graph.add_node<gua::TransformNode>("/screen", "eye");
-  eye->translate(0, 0, 1.5);
+  eye->translate(0, 0, 5);
+
+  unsigned int width = 1920;
+  unsigned int height = (9.0 / 16.0) * width;
 
   auto pipe = new gua::Pipeline();
-  pipe->config.set_camera(gua::Camera("/screen/eye", "/screen/eye", "/screen", "/screen", "main_scenegraph"));
+  pipe->config.set_camera(gua::Camera("/screen/eye", "/screen/eye",
+                                      "/screen", "/screen",
+                                      "main_scenegraph"));
+  pipe->config.set_left_resolution(gua::math::vec2ui(width, height));
   pipe->config.set_enable_fps_display(true);
-  pipe->set_window(new gua::Window());
+  pipe->config.set_enable_frustum_culling(true);
+  pipe->config.set_enable_preview_display(true);
+
+  auto window(new gua::Window());
+  window->config.set_size(gua::math::vec2ui(width, height));
+  window->config.set_left_resolution(gua::math::vec2ui(width, height));
+  window->config.set_enable_vsync(true);
+
+  pipe->set_window(window);
 
   gua::Renderer renderer({pipe});
 
@@ -58,7 +89,7 @@ int main(int argc, char** argv) {
   while (true) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100/6));
 
-	  teapot->rotate(0.1, 0, 1, 0);
+	  scatterplot->rotate(0.1, 0, 1, 0);
 
     renderer.queue_draw({&graph});
   }
