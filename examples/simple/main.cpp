@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
     , dataset
     , "Gewicht(t)"
     , "PS"
-    //, "Vmax(km/h)"
+    , "Vmax(km/h)"
   ));
   auto scatterplot = graph.add_node("/", scatterplot_geometry);
   scatterplot->scale(0.5f);
