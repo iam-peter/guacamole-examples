@@ -25,6 +25,7 @@
 #include <gua/utils/DataSet.hpp>
 #include <gua/utils/string_utils.hpp>
 
+#include <gua/renderer/enums.hpp>
 #include <gua/renderer/ScatterPlotLoader.hpp>
 
 #include <iostream>
@@ -52,34 +53,41 @@ int main(int argc, char** argv) {
     , "Vmax(km/h)"
   ));
   auto scatterplot = graph.add_node("/", scatterplot_geometry);
-  scatterplot->scale(0.5f);
+  scatterplot->scale(0.2f);
 
   auto light = graph.add_node<gua::PointLightNode>("/", "light");
   light->scale(5.f);
   light->translate(0, 1.f, 1.f);
 
   auto screen = graph.add_node<gua::ScreenNode>("/", "screen");
-  screen->data.set_size(gua::math::vec2(1.6f, 0.9f));
+  screen->data.set_size(gua::math::vec2(0.45f, 0.253125));
 
-  auto eye = graph.add_node<gua::TransformNode>("/screen", "eye");
-  eye->translate(0, 0, 5);
+  auto left_eye = graph.add_node<gua::TransformNode>("/screen", "left_eye");
+  left_eye->translate(-0.032, 0, 0.6);
+
+  auto right_eye = graph.add_node<gua::TransformNode>("/screen", "right_eye");
+  right_eye->translate(0.032, 0, 0.6);
 
   unsigned int width = 1920;
   unsigned int height = (9.0 / 16.0) * width;
 
   auto pipe = new gua::Pipeline();
-  pipe->config.set_camera(gua::Camera("/screen/eye", "/screen/eye",
+  pipe->config.set_camera(gua::Camera("/screen/left_eye", "/screen/right_eye",
                                       "/screen", "/screen",
                                       "main_scenegraph"));
   pipe->config.set_left_resolution(gua::math::vec2ui(width, height));
+  pipe->config.set_right_resolution(gua::math::vec2ui(width, height));
   pipe->config.set_enable_fps_display(true);
   pipe->config.set_enable_frustum_culling(true);
   pipe->config.set_enable_preview_display(true);
+  pipe->config.set_enable_stereo(true);
 
   auto window(new gua::Window());
   window->config.set_size(gua::math::vec2ui(width, height));
   window->config.set_left_resolution(gua::math::vec2ui(width, height));
+  window->config.set_right_resolution(gua::math::vec2ui(width, height));
   window->config.set_enable_vsync(true);
+  window->config.set_stereo_mode(gua::StereoMode::ANAGLYPH_RED_CYAN);
 
   pipe->set_window(window);
 
