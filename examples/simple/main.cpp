@@ -38,14 +38,14 @@ int main(int argc, char** argv) {
 
   auto teapot = graph.add_node("/", teapot_geometry);
 
-  auto light = graph.add_node<gua::PointLightNode>("/", "light");
+  auto light = graph.add_node<gua::node::PointLightNode>("/", "light");
   light->scale(5.f);
   light->translate(0, 1.f, 1.f);
 
-  auto screen = graph.add_node<gua::ScreenNode>("/", "screen");
+  auto screen = graph.add_node<gua::node::ScreenNode>("/", "screen");
   screen->data.set_size(gua::math::vec2(1.6f, 0.9f));
 
-  auto eye = graph.add_node<gua::TransformNode>("/screen", "eye");
+  auto eye = graph.add_node<gua::node::TransformNode>("/screen", "eye");
   eye->translate(0, 0, 1.5);
 
   auto pipe = new gua::Pipeline();

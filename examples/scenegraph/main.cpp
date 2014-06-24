@@ -25,10 +25,10 @@
 const std::string geometry("data/objects/monkey.obj");
 // const std::string geometry("data/objects/cube.obj");
 
-std::vector<std::shared_ptr<gua::TransformNode>> add_lights(gua::SceneGraph& graph,
+std::vector<std::shared_ptr<gua::node::TransformNode>> add_lights(gua::SceneGraph& graph,
                                                   int count) {
 
-  std::vector<std::shared_ptr<gua::TransformNode>> lights(count);
+  std::vector<std::shared_ptr<gua::node::TransformNode>> lights(count);
 
   for (int i(0); i < count; ++i) {
     scm::math::vec3 randdir(gua::math::random::get(-1.f, 1.f),
@@ -46,11 +46,11 @@ std::vector<std::shared_ptr<gua::TransformNode>> add_lights(gua::SceneGraph& gra
 
     sphere_geometry->scale(0.04, 0.04, 0.04);
 
-    lights[i] = graph.add_node("/", std::make_shared<gua::TransformNode>("light" + gua::string_utils::to_string(i)));
+    lights[i] = graph.add_node("/", std::make_shared<gua::node::TransformNode>("light" + gua::string_utils::to_string(i)));
     lights[i]->add_child(sphere_geometry);
     lights[i]->translate(randdir[0], randdir[1], randdir[2]);
 
-    auto light = lights[i]->add_child(std::make_shared<gua::PointLightNode>("light"));
+    auto light = lights[i]->add_child(std::make_shared<gua::node::PointLightNode>("light"));
     light->data.set_color(gua::utils::Color3f::random());
   }
 
@@ -58,7 +58,7 @@ std::vector<std::shared_ptr<gua::TransformNode>> add_lights(gua::SceneGraph& gra
 }
 
 void setup_scene(gua::SceneGraph& graph,
-                 std::shared_ptr<gua::Node> const& root_monkey,
+                 std::shared_ptr<gua::node::Node> const& root_monkey,
                  int depth_count) {
 
   if (depth_count > 0) {
@@ -123,11 +123,11 @@ int main(int argc, char** argv) {
 
   auto lights = add_lights(graph, 50);
 
-  auto screen = graph.add_node<gua::ScreenNode>("/", "screen");
+  auto screen = graph.add_node<gua::node::ScreenNode>("/", "screen");
   screen->data.set_size(gua::math::vec2(1.6, 0.9));
   screen->translate(0, 0, 1.f);
 
-  auto eye = graph.add_node<gua::TransformNode>("/", "eye");
+  auto eye = graph.add_node<gua::node::TransformNode>("/", "eye");
   eye->translate(0, 0, 2.5);
 
   unsigned width = 1500;
@@ -179,8 +179,8 @@ int main(int argc, char** argv) {
     time += frame_time;
     timer.reset();
 
-    std::function<void (std::shared_ptr<gua::Node>, int)> rotate;
-    rotate = [&](std::shared_ptr<gua::Node> node, int depth) {
+    std::function<void (std::shared_ptr<gua::node::Node>, int)> rotate;
+    rotate = [&](std::shared_ptr<gua::node::Node> node, int depth) {
       node->rotate(frame_time * (1+depth) * 0.5, 1, 1, 0);
       for (auto child: node->get_children()) {
         rotate(child, ++depth);
