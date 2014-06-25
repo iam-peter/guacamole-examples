@@ -29,10 +29,13 @@ int main(int argc, char** argv)
 {
   gua::init(argc, argv);
 
+  gua::ShadingModelDatabase::load_shading_models_from("data/materials/");
+  gua::MaterialDatabase::load_materials_from("data/materials/");
+
   gua::SceneGraph scene_graph("main_scene");
 
   gua::GraphLoader loader;
-  auto graph_geometry(loader.create());
+  auto graph_geometry(loader.create("graph_visoalization","data/materials/Red.gmd"));
 
   auto graph = scene_graph.add_node("/",graph_geometry);
 
@@ -41,20 +44,25 @@ int main(int argc, char** argv)
   light->translate(0, 1.f, 1.f);
 
   auto screen = scene_graph.add_node<gua::ScreenNode>("/","screen");
-  screen->data.set_size(gua::math::vec2(1.6f, 0.9f));
+  screen->data.set_size(gua::math::vec2(1.6f,0.9f));
+	screen->translate(0.0f, 0.0f, 5.0f);
 
   auto eye = scene_graph.add_node<gua::TransformNode>("/screen", "eye");
-  eye->translate(0, 0, 1.5);
+  eye->translate(0, 0, 7.0);
 
   auto pipe = new gua::Pipeline();
   pipe->config.set_camera(gua::Camera("/screen/eye","/screen/eye",
 																			"/screen","/screen",
-																			"main_scenegraph"));
+																			"main_scene"));
   pipe->config.set_enable_fps_display(true);
 
   pipe->config.set_enable_backface_culling(false);
+	pipe->config.set_enable_preview_display(true);
 
   pipe->set_window(new gua::Window());
+	pipe->get_window()->config.set_left_resolution(gua::math::vec2ui(1600, 1200));
+  pipe->get_window()->config.set_size(gua::math::vec2ui(1600, 1200));
+  pipe->config.set_left_resolution(gua::math::vec2ui(1600, 1200));
 
   gua::Renderer renderer({pipe});
 
