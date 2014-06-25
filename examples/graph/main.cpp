@@ -25,33 +25,31 @@
 #include <thread>
 #include <chrono>
 
-int main(int argc, char** argv) {
-
-  // initialize guacamole
+int main(int argc, char** argv)
+{
   gua::init(argc, argv);
 
-  // setup scene
-  gua::SceneGraph graph("main_scenegraph");
+  gua::SceneGraph scene_graph("main_scene");
 
   gua::GraphLoader loader;
-  auto teapot_geometry(loader.create_geometry_from_file("teapot", "data/objects/teapot.obj", "data/materials/Red.gmd", gua::GraphLoader::NORMALIZE_POSITION | gua::GraphLoader::NORMALIZE_SCALE));
+  auto graph_geometry(loader.create());
 
-  auto teapot = graph.add_node("/", teapot_geometry);
+  auto graph = scene_graph.add_node("/",graph_geometry);
 
-  teapot->scale(1.0f);
-
-  auto light = graph.add_node<gua::PointLightNode>("/", "light");
+  auto light = scene_graph.add_node<gua::PointLightNode>("/","light");
   light->scale(5.f);
   light->translate(0, 1.f, 1.f);
 
-  auto screen = graph.add_node<gua::ScreenNode>("/", "screen");
+  auto screen = scene_graph.add_node<gua::ScreenNode>("/","screen");
   screen->data.set_size(gua::math::vec2(1.6f, 0.9f));
 
-  auto eye = graph.add_node<gua::TransformNode>("/screen", "eye");
+  auto eye = scene_graph.add_node<gua::TransformNode>("/screen", "eye");
   eye->translate(0, 0, 1.5);
 
   auto pipe = new gua::Pipeline();
-  pipe->config.set_camera(gua::Camera("/screen/eye", "/screen/eye", "/screen", "/screen", "main_scenegraph"));
+  pipe->config.set_camera(gua::Camera("/screen/eye","/screen/eye",
+																			"/screen","/screen",
+																			"main_scenegraph"));
   pipe->config.set_enable_fps_display(true);
 
   pipe->config.set_enable_backface_culling(false);
@@ -60,14 +58,12 @@ int main(int argc, char** argv) {
 
   gua::Renderer renderer({pipe});
 
-  // application loop
-  while (true) {
+  while (true)
+	{
     std::this_thread::sleep_for(std::chrono::milliseconds(100/6));
-
-teapot->rotate(0.1, 0, 1, 0);
-
-    renderer.queue_draw({&graph});
+    renderer.queue_draw({&scene_graph});
   }
 
   return 0;
 }
+
