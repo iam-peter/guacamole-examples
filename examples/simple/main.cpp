@@ -44,13 +44,14 @@ int main(int argc, char** argv) {
   dataset.load_from_csv("data/csv/cars.csv", ";");
 
   gua::ScatterPlotLoader scatterPlotLoader;
-  auto scatterplot_geometry(scatterPlotLoader.create_from_dataset(
+  auto scatterplot_geometry(scatterPlotLoader.create_from_csvfile(
       "scatterplot"
     , "data/materials/Red.gmd"
-    , dataset
+    , "data/csv/cars.csv"
     , "Gewicht(t)"
     , "PS"
     , "Vmax(km/h)"
+    , ";"
   ));
   auto scatterplot = graph.add_node("/", scatterplot_geometry);
   scatterplot->scale(0.5f);
