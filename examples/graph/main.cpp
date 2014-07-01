@@ -10,7 +10,7 @@ init_graph(gua::SceneGraph * scene_graph)
 
   std::shared_ptr<gua::Node>
 
-  graph_node(loader.create("graph","data/materials/Red.gmd"));
+  graph_node(loader.create("graph","data/materials/White.gmd"));
 
   return scene_graph->add_node(scene_graph->get_root(),graph_node);
 }
@@ -33,7 +33,7 @@ init_screen(gua::SceneGraph * scene_graph)
   scene_graph->add_node<gua::ScreenNode>(scene_graph->get_root(),"screen");
 
   screen->data.set_size(gua::math::vec2(1.6f,0.9f));
-  screen->translate(0.0f,0.0f,1.0f);
+  screen->translate(0.0f,0.0f,12.0f);
 
   return screen;
 }
@@ -44,8 +44,8 @@ init_eye(gua::SceneGraph * scene_graph)
 {
   std::shared_ptr<gua::TransformNode> eye =
 
-  scene_graph->add_node<gua::TransformNode>(scene_graph->get_root(),"eye");
-  eye->translate(0.0f,0.0f,2.5f);
+  scene_graph->add_node<gua::TransformNode>("/screen","eye");
+  eye->translate(0.0f,0.0f,5.0f);
 
   return eye;
 }
@@ -54,12 +54,13 @@ void pipe_config(gua::Pipeline * pipe)
 {
   unsigned const width = 1600 , height = 900;
 
-  gua::Camera camera("eye","eye","screen","screen","scene");
+  gua::Camera camera("/screen/eye","screen/eye","screen","screen","scene");
   pipe->config.set_camera(camera);
 
   pipe->config.set_left_resolution(gua::math::vec2ui(width,height));
   pipe->config.set_enable_fps_display(true);
   pipe->config.set_enable_preview_display(true);
+  pipe->config.set_enable_backface_culling(false);
 
   gua::Window * window = new gua::Window();
   window->config.set_left_resolution(gua::math::vec2ui(width,height));
@@ -97,6 +98,7 @@ int main(int argc,char ** argv)
 
   [&]()
   {
+    graph_node->rotate(0.2,0.0,0.1,0.0);
     renderer.queue_draw(entire_scene);
   };
 
