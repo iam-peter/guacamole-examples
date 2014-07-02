@@ -10,18 +10,24 @@ init_graph(gua::SceneGraph * scene_graph)
 
   std::shared_ptr<gua::Node>
 
-  graph_node(loader.create("graph","data/materials/White.gmd"));
+  graph(loader.create("graph","data/materials/Red.gmd"));
 
-  return scene_graph->add_node(scene_graph->get_root(),graph_node);
+  graph->translate(0.0f,0.0f,-50.0f);
+
+  return scene_graph->add_node(scene_graph->get_root(),graph);
 }
 
-std::shared_ptr<gua::PointLightNode> 
+std::shared_ptr<gua::SunLightNode> 
 
 init_light(gua::SceneGraph * scene_graph)
 {
-  return scene_graph->
+  std::shared_ptr<gua::SunLightNode> light = 
 
-  add_node<gua::PointLightNode>(scene_graph->get_root(),"light");
+  scene_graph->add_node<gua::SunLightNode>(scene_graph->get_root(),"light");
+
+  light->translate(0.0f,0.0f,0.0f);
+
+  return light;
 }
 
 std::shared_ptr<gua::ScreenNode> 
@@ -33,7 +39,7 @@ init_screen(gua::SceneGraph * scene_graph)
   scene_graph->add_node<gua::ScreenNode>(scene_graph->get_root(),"screen");
 
   screen->data.set_size(gua::math::vec2(1.6f,0.9f));
-  screen->translate(0.0f,0.0f,12.0f);
+  screen->translate(0.0f,0.0f,0.0f);
 
   return screen;
 }
@@ -45,6 +51,7 @@ init_eye(gua::SceneGraph * scene_graph)
   std::shared_ptr<gua::TransformNode> eye =
 
   scene_graph->add_node<gua::TransformNode>("/screen","eye");
+
   eye->translate(0.0f,0.0f,5.0f);
 
   return eye;
@@ -98,7 +105,7 @@ int main(int argc,char ** argv)
 
   [&]()
   {
-    graph_node->rotate(0.2,0.0,0.1,0.0);
+    //graph_node->rotate(0.2,0.0,0.1,0.0);
     renderer.queue_draw(entire_scene);
   };
 
