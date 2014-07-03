@@ -12,7 +12,7 @@ init_graph(gua::SceneGraph * scene_graph)
 
   graph(loader.create("graph","data/materials/Red.gmd"));
 
-  graph->translate(0.0f,0.0f,-50.0f);
+  graph->translate(0.0f,0.0f,-1000.0f);
 
   return scene_graph->add_node(scene_graph->get_root(),graph);
 }
@@ -50,9 +50,9 @@ init_eye(gua::SceneGraph * scene_graph)
 {
   std::shared_ptr<gua::TransformNode> eye =
 
-  scene_graph->add_node<gua::TransformNode>("/screen","eye");
+  scene_graph->add_node<gua::TransformNode>("screen/","eye");
 
-  eye->translate(0.0f,0.0f,5.0f);
+  eye->translate(0.0f,0.0f,2.0f);
 
   return eye;
 }
@@ -61,7 +61,7 @@ void pipe_config(gua::Pipeline * pipe)
 {
   unsigned const width = 1600 , height = 900;
 
-  gua::Camera camera("/screen/eye","screen/eye","screen","screen","scene");
+  gua::Camera camera("screen/eye","screen/eye","screen","screen","scene");
   pipe->config.set_camera(camera);
 
   pipe->config.set_left_resolution(gua::math::vec2ui(width,height));
@@ -91,7 +91,6 @@ int main(int argc,char ** argv)
   std::vector<gua::Pipeline *> pipes;
   pipes.insert(pipes.begin(),pipe);
   gua::Renderer renderer(pipes);
-
 
   double const frame_time = 1.0f / 60.0f;
 
