@@ -31,6 +31,7 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <cmath>
 
 int main(int argc, char** argv) {
 
@@ -40,18 +41,20 @@ int main(int argc, char** argv) {
   // setup scene
   gua::SceneGraph graph("main_scenegraph");
 
-  gua::utils::DataSet dataset;
-  dataset.load_from_csv("data/csv/cars.csv", ";");
-
   gua::ScatterPlotLoader scatterPlotLoader;
-  auto scatterplot_geometry(scatterPlotLoader.create_from_csvfile(
+  std::vector<float> xdata, ydata;
+  for (float x(0.0); x < 1.0; x += 0.05)
+  {
+    xdata.push_back(x);
+    ydata.push_back(0.5 + 0.5 * std::sin(x * 2 * M_PI));
+
+  }
+  auto scatterplot_geometry(scatterPlotLoader.create(
       "scatterplot"
     , "data/materials/Red.gmd"
-    , "data/csv/cars.csv"
-    , "Gewicht(t)"
-    , "PS"
-    , "Vmax(km/h)"
-    , ";"
+    , xdata
+    , ydata
+    , ydata
   ));
   auto scatterplot = graph.add_node("/", scatterplot_geometry);
   scatterplot->scale(0.5f);
