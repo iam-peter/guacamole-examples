@@ -12,7 +12,7 @@ init_graph(gua::SceneGraph * scene_graph)
 
   graph(loader.create("graph","data/materials/Red.gmd"));
 
-  graph->translate(0.0f,0.0f,-1000.0f);
+  graph->translate(0.0f,0.0f,-400.0f);
 
   return scene_graph->add_node(scene_graph->get_root(),graph);
 }
