@@ -36,6 +36,7 @@ include(define_macros)
 include(find_schism)
 include(FindBoost)
 include(find_bullet)
+include(FindOGDF)
 
 if (UNIX)
   pkg_check_modules(ASSIMP REQUIRED assimp)
@@ -51,8 +52,9 @@ set(LIB_PATH
     ${BOOST_LIBRARY_DIRS}
     ${BULLET_LIBRARY_DIRS}
     ${GUACAMOLE_LIBRARY_DIRS}
-	${ASSIMP_LIBRARY_DIRS}
-	${JSON_LIBRARY_DIRS}
+	  ${ASSIMP_LIBRARY_DIRS}
+	  ${JSON_LIBRARY_DIRS}
+    ${OGDF_LIBRARY_DIR}
 )
 link_directories(${LIB_PATH})
 
@@ -61,8 +63,11 @@ set(LIBS
     ${BOOST_LIBRARIES}
     ${BULLET_LIBRARIES}
     ${GUACAMOLE_LIBRARIES}
-	${ASSIMP_LIBRARIES}
-	${JSON_LIBRARIES}
+	  ${ASSIMP_LIBRARIES}
+	  ${JSON_LIBRARIES}
+    OGDF
+    COIN
+    pthread
 )
 #link_libraries(${LIBS})
 
@@ -71,8 +76,9 @@ set(INCLUDE_PATHS
     ${BOOST_INCLUDE_DIRS}
     ${BULLET_INCLUDE_DIRS}
     ${GUACAMOLE_INCLUDE_DIRS}
-	${ASSIMP_INCLUDE_DIRS}
-	${JSON_INCLUDE_DIRS}
+	  ${ASSIMP_INCLUDE_DIRS}
+	  ${JSON_INCLUDE_DIRS}
+    ${OGDF_INCLUDE_DIR}
 )
 include_directories(${INCLUDE_PATHS})
 
