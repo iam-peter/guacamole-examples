@@ -10,7 +10,7 @@ init_graph(gua::SceneGraph * scene_graph)
 
   std::shared_ptr<gua::Node>
 
-  graph(loader.generate("graph","data/materials/Red.gmd"));
+  graph(loader.generate("graph","data/materials/Red.gmd",15,15));
 
   graph->translate(0.0f,0.0f,-400.0f);
 
