@@ -26,7 +26,7 @@
 #include <gua/utils/DataSet.hpp>
 #include <gua/utils/string_utils.hpp>
 
-#include <gua/renderer/ScatterPlotLoader.hpp>
+#include <gua/renderer/InfoVisLoader.hpp>
 
 #include <iostream>
 #include <thread>
@@ -41,23 +41,21 @@ int main(int argc, char** argv) {
   // setup scene
   gua::SceneGraph graph("main_scenegraph");
 
-  gua::ScatterPlotLoader scatterPlotLoader;
+  gua::InfoVisLoader infovis_loader;
   std::vector<float> xdata, ydata;
   for (float x(0.0); x < 1.0; x += 0.05)
   {
     xdata.push_back(x);
     ydata.push_back(0.5 + 0.5 * std::sin(x * 2 * M_PI));
-
   }
-  auto scatterplot_geometry(scatterPlotLoader.create(
-      "scatterplot"
+  auto linechart_geometry(infovis_loader.create_linechart(
+      "linechart"
     , "data/materials/Red.gmd"
     , xdata
     , ydata
-    , ydata
   ));
-  auto scatterplot = graph.add_node("/", scatterplot_geometry);
-  scatterplot->scale(0.5f);
+  auto linechart = graph.add_node("/", linechart_geometry);
+  linechart->scale(0.5f);
 
   auto light = graph.add_node<gua::node::PointLightNode>("/", "light");
   light->scale(5.f);
@@ -94,7 +92,7 @@ int main(int argc, char** argv) {
   while (true) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100/6));
 
-	  scatterplot->rotate(0.1, 0, 1, 0);
+	  linechart->rotate(0.1, 0, 1, 0);
 
     renderer.queue_draw({&graph});
   }
