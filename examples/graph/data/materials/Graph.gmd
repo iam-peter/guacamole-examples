@@ -1,0 +1,9 @@
+
+{
+	"shading_model" : "Phong.gsd",
+	"uniforms" :
+	{
+		"emit" : "0.2",
+		"shinyness" : "10"
+	}
+}
