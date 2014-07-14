@@ -43,19 +43,20 @@ int main(int argc, char** argv) {
 
   gua::InfoVisLoader infovis_loader;
   std::vector<float> xdata, ydata;
-  for (float x(0.0); x < 1.0; x += 0.05)
+  for (float x(0.0); x < 1.0; x += 0.1)
   {
     xdata.push_back(x);
-    ydata.push_back(0.5 + 0.5 * std::sin(x * 2 * M_PI));
+    //ydata.push_back(0.5 + 0.5 * std::sin(x * 2 * M_PI));
+    ydata.push_back(std::rand() / (float)(RAND_MAX));
   }
-  auto linechart_geometry(infovis_loader.create_linechart(
-      "linechart"
+  auto areachart_geometry(infovis_loader.create_areachart(
+      "areachart"
     , "data/materials/Red.gmd"
     , xdata
     , ydata
   ));
-  auto linechart = graph.add_node("/", linechart_geometry);
-  linechart->scale(0.5f);
+  auto areachart = graph.add_node("/", areachart_geometry);
+  areachart->scale(0.3f);
 
   auto light = graph.add_node<gua::node::PointLightNode>("/", "light");
   light->scale(5.f);
@@ -78,6 +79,7 @@ int main(int argc, char** argv) {
   pipe->config.set_enable_fps_display(true);
   pipe->config.set_enable_frustum_culling(true);
   pipe->config.set_enable_preview_display(true);
+  pipe->config.set_enable_backface_culling(true);
 
   auto window(new gua::Window());
   window->config.set_size(gua::math::vec2ui(width, height));
@@ -92,7 +94,7 @@ int main(int argc, char** argv) {
   while (true) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100/6));
 
-	  linechart->rotate(0.1, 0, 1, 0);
+	  //areachart->rotate(0.1, 0, 1, 0);
 
     renderer.queue_draw({&graph});
   }
