@@ -43,11 +43,11 @@ int main(int argc, char** argv) {
 
   gua::InfoVisLoader infovis_loader;
   std::vector<float> xdata, ydata;
-  for (float x(0.0); x < 1.0; x += 0.1)
+  for (float x(0.0); x <= 1.0; x += 0.1)
   {
     xdata.push_back(x);
-    //ydata.push_back(0.5 + 0.5 * std::sin(x * 2 * M_PI));
-    ydata.push_back(std::rand() / (float)(RAND_MAX));
+    //ydata.push_back(0.5 * std::sin(x * 2 * M_PI));
+    ydata.push_back(-0.5f + std::rand() / (float)(RAND_MAX));
   }
   auto areachart_geometry(infovis_loader.create_areachart(
       "areachart"
@@ -79,7 +79,7 @@ int main(int argc, char** argv) {
   pipe->config.set_enable_fps_display(true);
   pipe->config.set_enable_frustum_culling(true);
   pipe->config.set_enable_preview_display(true);
-  pipe->config.set_enable_backface_culling(true);
+  pipe->config.set_enable_backface_culling(false);
 
   auto window(new gua::Window());
   window->config.set_size(gua::math::vec2ui(width, height));
