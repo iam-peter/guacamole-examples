@@ -37,6 +37,7 @@ include(find_schism)
 include(FindBoost)
 include(find_bullet)
 include(FindOGDF)
+include(find_igraph)
 
 if (UNIX)
   pkg_check_modules(ASSIMP REQUIRED assimp)
@@ -55,6 +56,7 @@ set(LIB_PATH
 	  ${ASSIMP_LIBRARY_DIRS}
 	  ${JSON_LIBRARY_DIRS}
     ${OGDF_LIBRARY_DIR}
+    ${IGRAPH_LIBRARY_DIR}
 )
 link_directories(${LIB_PATH})
 
@@ -67,7 +69,7 @@ set(LIBS
 	  ${JSON_LIBRARIES}
     OGDF
     COIN
-    pthread
+    igraph
 )
 #link_libraries(${LIBS})
 
@@ -79,6 +81,7 @@ set(INCLUDE_PATHS
 	  ${ASSIMP_INCLUDE_DIRS}
 	  ${JSON_INCLUDE_DIRS}
     ${OGDF_INCLUDE_DIR}
+    ${IGRAPH_INCLUDE_DIR}
 )
 include_directories(${INCLUDE_PATHS})
 

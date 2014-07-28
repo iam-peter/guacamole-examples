@@ -10,9 +10,9 @@ init_graph(gua::SceneGraph * scene_graph)
 
   std::shared_ptr<gua::Node>
 
-  graph(loader.generate("graph","data/materials/Graph.gmd",10,10));
+  graph(loader.generate("graph","data/materials/Graph.gmd",20,20));
 
-  graph->translate(0.0f,0.0f,-400.0f);
+  graph->translate(0.0f,0.0f,0.0f);
 
   return scene_graph->add_node(scene_graph->get_root(),graph);
 }
@@ -39,7 +39,7 @@ init_screen(gua::SceneGraph * scene_graph)
   scene_graph->add_node<gua::ScreenNode>(scene_graph->get_root(),"screen");
 
   screen->data.set_size(gua::math::vec2(1.6f,0.9f));
-  screen->translate(0.0f,0.0f,0.0f);
+  screen->translate(0.0f,0.0f,400.0f);
 
   return screen;
 }
@@ -104,7 +104,7 @@ int main(int argc,char ** argv)
 
   [&]()
   {
-    //graph_node->rotate(0.2,0.0,0.1,0.0);
+    graph_node->rotate(0.2,0.0,0.1,0.0);
     renderer.queue_draw(entire_scene);
   };
 
