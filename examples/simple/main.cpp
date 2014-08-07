@@ -25,6 +25,7 @@
 #include <gua/utils/DataColumn.hpp>
 #include <gua/utils/DataSet.hpp>
 #include <gua/utils/string_utils.hpp>
+#include <gua/math/math.hpp>
 
 #include <gua/renderer/InfoVisLoader.hpp>
 
@@ -42,21 +43,21 @@ int main(int argc, char** argv) {
   gua::SceneGraph graph("main_scenegraph");
 
   gua::InfoVisLoader infovis_loader;
-  std::vector<float> xdata, ydata;
-  for (float x(0.0); x <= 1.0; x += 0.1)
+  std::vector<gua::math::vec3> vertices;
+  unsigned int steps = 30;
+  for (float x(0.0); x <= 1.0; x += 1.0 / steps)
   {
-    xdata.push_back(x);
-    //ydata.push_back(0.5 * std::sin(x * 2 * M_PI));
-    ydata.push_back(-0.5f + std::rand() / (float)(RAND_MAX));
+    vertices.push_back(
+      gua::math::vec3(-0.5 + x, 0.5 * std::sin(x * 2 * M_PI), 0.0)
+    );
   }
-  auto areachart_geometry(infovis_loader.create_areachart(
-      "areachart"
+  auto polyline_geometry(infovis_loader.create_polyline(
+      "linechart"
     , "data/materials/Red.gmd"
-    , xdata
-    , ydata
+    , vertices
   ));
-  auto areachart = graph.add_node("/", areachart_geometry);
-  areachart->scale(0.3f);
+  auto polyline = graph.add_node("/", polyline_geometry);
+  polyline->scale(1.0f, 0.5f, 1.0f);
 
   auto light = graph.add_node<gua::node::PointLightNode>("/", "light");
   light->scale(5.f);
