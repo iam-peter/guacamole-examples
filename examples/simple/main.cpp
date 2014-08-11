@@ -45,8 +45,10 @@ int main(int argc, char** argv) {
   gua::InfoVisLoader infovis_loader;
   std::vector<gua::math::vec3> vertices;
   unsigned int steps = 30;
-  for (float x(0.0); x <= 1.0; x += 1.0 / steps)
+  for (unsigned int i(0); i < steps + 1; ++i)
   {
+    float x = 0.0 + i * 1.0 / steps;
+    std::cout << "x = " << x << std::endl;
     vertices.push_back(
       gua::math::vec3(-0.5 + x, 0.5 * std::sin(x * 2 * M_PI), 0.0)
     );
